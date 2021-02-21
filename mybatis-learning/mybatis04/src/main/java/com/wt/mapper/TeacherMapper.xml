@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wt.mapper.TeacherMapper">
+    <select id="getStudentsOfTeacherByTeacherId" resultMap="TeacherStudent">
+        select student.id sid,student.name sname from student,teacher where student.tid=teacher.id and teacher.id=1;
+    </select>
+    <resultMap id="TeacherStudent" type="Student">
+        <result property="name" column="sname"/>
+        <result property="id" column="sid"/>
+    </resultMap>
+    <!--上面自己琢磨的，可能不规范或性能不好-->
+    <select id="getTeacherAndHerStudents" resultMap="TeacherStudent2">
+        select student.id sid,student.name sname,teacher.name tname
+        from student,teacher
+        where student.tid=teacher.id and teacher.id=#{tid}
+    </select>
+    <resultMap id="TeacherStudent2" type="Teacher">
+        <result property="name" column="tname"/>
+        <!--老师拥有一个列表的学生，用collection来表示这个属性，collection中的Type不是javaType而是ofType-->
+        <collection property="students" ofType="Student">
+            <result property="name" column="sname"/>
+            <result property="id" column="sid"/>
+        </collection>
+    </resultMap>
+
+</mapper>

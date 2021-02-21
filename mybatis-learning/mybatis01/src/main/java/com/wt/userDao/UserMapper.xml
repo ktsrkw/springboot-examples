@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--一个mapper对应一个接口，在namespace中写出接口的路径-->
+<mapper namespace="com.wt.userDao.UserDao">
+    <!--id对应接口中的方法，可以看成实现了这个方法-->
+    <select id="getUserList" resultType="User">
+        select * from mybatis.user;
+    </select>
+
+    <!--传入参数，要设置parameterType-->
+    <select id="getUserById" parameterType="int" resultType="com.wt.pojo.User">
+        <!--获取传入的参数用取值符号#{形参名}-->
+        select * from mybatis.user where id=#{id};
+    </select>
+
+    <insert id="insertUser" parameterType="com.wt.pojo.User">
+        <!--若传入的参数是个对象，获取对象中的属性值直接通过#{属性名}就能得到-->
+        insert into mybatis.user(id,name,pwd) values (#{id},#{name},#{pwd});
+    </insert>
+
+    <update id="updateUser" parameterType="com.wt.pojo.User">
+        <!--一样，对象中的属性值用#{}取-->
+        update mybatis.user set pwd=#{pwd} where id=#{id};
+    </update>
+
+    <delete id="deleteUser" parameterType="int">
+        delete from mybatis.user where id = #{id};
+    </delete>
+
+    <select id="getUsers" parameterType="String" resultType="com.wt.pojo.User">
+        <!--注意这里的字符串拼接-->
+        select * from mybatis.user where name like "%"#{value}"%";
+    </select>
+
+    <!--使用map来传参-->
+    <select id="getUserByLimit" parameterType="map" resultType="User">
+        <!--limit后面跟两个参数，第一个参数是显示分页的起始下标，第二个是页面的大小-->
+        select * from mybatis.user limit #{startIndex},#{pageSize};
+    </select>
+</mapper>

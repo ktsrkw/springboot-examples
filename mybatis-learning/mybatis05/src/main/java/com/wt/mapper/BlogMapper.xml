@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wt.mapper.BlogMapper">
+    <select id="getAllBlogs" resultType="Blog">
+        select * from blog;
+    </select>
+
+    <insert id="insertBlog" parameterType="Blog">
+        insert into blog(id,title,author,create_date,views)
+        values(#{id},#{title},#{author},#{createDate},#{views})
+    </insert>
+
+    <select id="getBlogsByDynamicSQL" parameterType="map" resultType="Blog">
+        select * from blog where 1=1<!--这里不正宗，后面会用where标签来解决-->
+        <if test="title != null">
+            and title like "%"#{title}"%"
+        </if>
+        <if test="author != null">
+            and author like "%"#{author}"%"
+        </if>
+    </select>
+
+    <select id="getBlogsByDynamicSQL1" parameterType="map" resultType="Blog">
+        select * from blog
+        <!--where标签会选择通过if测试的语句段进行拼接，而且会自动得帮你去掉and关键字。
+        如果全部满足则全部拼接，如果部分满足则部分拼接，可以自动的帮你去掉and关键字，比如
+        下面例子中，如果title没通过if测试而author通过了，where标签会帮你拼接and author like "%"#{author}"%"并且去掉and关键字以保证sql语法-->
+        <where>
+            <if test="title != null">
+                title like "%"#{title}"%"
+            </if>
+            <if test="author != null">
+                and author like "%"#{author}"%"
+            </if>
+        </where>
+    </select>
+
+    <select id="getBlogsByDynamicSQL2" parameterType="map" resultType="Blog">
+        select * from blog
+        <where><!--当然，choose可以不套where标签直接用-->
+            <choose>
+                <!--根据官方文档的介绍choose类似于switch语句，choose会选择满足when测试的语句段进行拼接-->
+                <when test="title != null">
+                    title like "%"#{title}"%"
+                </when>
+                <when test="views != null">
+                    views >= #{views}
+                </when>
+                <otherwise>
+                    <!--这里写条件都不满足时干啥，当然这个标签可以不写-->
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+    <select id="updateByDynamicSQL" parameterType="map">
+        <!--set标签用于update语句中，是的，与update的set对应，会自动进行判断并修改，这点和where一样，
+        set标签在需要去掉逗号的情况下也会自动去掉逗号以保证sql语法正确-->
+        update blog
+        <set>
+<!--            <if test="title != null">title=#{title},</if>-->
+<!--            <if test="author != null">author=#{author}</if>-->
+            <include refid="sqlTest"></include><!--这里通过include标签引入sql标签以复用sql标签内的内容-->
+        </set>
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </select>
+
+    <sql id="sqlTest">
+        <if test="title != null">title=#{title},</if>
+        <if test="author != null">author=#{author}</if>
+    </sql>
+
+</mapper>

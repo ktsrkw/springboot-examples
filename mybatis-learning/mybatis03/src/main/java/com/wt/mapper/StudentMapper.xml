@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wt.mapper.StudentMapper">
+    <!--resultMap是结果集映射，这个需要在下面再写一个resultMap标签来完成结果集映射，当然resultMap的id要对好-->
+    <select id="getAllStudents01" resultMap="StudentTeacher01">
+        select * from mybatis.student;
+    </select>
+    <!--下面的结果集映射将Student中的属性(property)与表中的列(column)相映射起来-->
+    <resultMap id="StudentTeacher01" type="Student">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <!--对于简单的属性，直接写映射关系就好了，甚至不写也可以，mybatis会自动帮你对应(有前提)-->
+        <!--对于复杂的属性，比如引用，就得用association或者collection了，用法参照下面-->
+        <!--Student中的teacher属性是个引用，想要查询到，就得嵌套其他的查询-->
+        <association property="teacher" column="tid" javaType="Teacher" select="getTeacherById"/>
+    </resultMap>
+    <!--下面这个查询标签的id对应第16行中的select的值，所以这个查询会被上面“调用”，参数也会自动传递(比如这里的tid)-->
+    <select id="getTeacherById" resultType="Teacher">
+        select * from mybatis.teacher where id = #{tid};
+    </select>
+    <!--以上的三个标签实现了嵌套查询-->
+    <!--=====================================另一种方式(类似联表查询)=====================================-->
+    <select id="getAllStudents02" resultMap="StudentTeacher02">
+        select student.id sid,student.name sname,teacher.name tname
+        from student,teacher
+        where student.tid=teacher.id
+    </select>
+    <resultMap id="StudentTeacher02" type="Student">
+        <result property="id" column="sid"/>
+        <result property="name" column="sname"/>
+        <association property="teacher" javaType="Teacher">
+            <result property="name" column="tname"/>
+        </association>
+    </resultMap>
+
+</mapper>

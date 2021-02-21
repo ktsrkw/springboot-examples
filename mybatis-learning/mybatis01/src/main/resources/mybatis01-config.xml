@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--引入外部配置文件，driver、url、username、password什么的可以写在配置文件里，不用每次都写在这下面了-->
+    <properties resource="db.properties"></properties>
+
+    <!--起别名的方法一、绑定一个类去起别名，在mapper中就不用写 包名.类名 了-->
+    <!--
+    <typeAliases>
+        <typeAlias type="com.wt.pojo.User" alias="User"></typeAlias>
+    </typeAliases>
+    -->
+
+    <!--日志，可以用来排错-->
+    <!--
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+    -->
+
+    <!--起别名的方法二、指定一个包名，mybatis会在该包下面自动寻找类，就不用再写包名了-->
+    <typeAliases>
+        <package name="com.wt.pojo"></package>
+    </typeAliases>
+
+    <environments default="development">
+        <!--这个环境用来使用某一用户连接数据库，这里我使用root用户-->
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--写的mapper一定要在这里注册-->
+    <mappers>
+        <!--注意注册的路径不是用.而是用/-->
+        <mapper resource="com/wt/userDao/UserMapper.xml"/>
+    </mappers>
+</configuration>
