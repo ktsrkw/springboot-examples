@@ -1,8 +1,0 @@
-spring:
-  servlet:
-    multipart:
-      # 配置上传的单个文件的最大大小，默认为 1MB
-      max-file-size: 10MB
-
-  thymeleaf:
-    cache: false
