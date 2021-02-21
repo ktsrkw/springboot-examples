@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+</head>
+<body>
+<h1>登录</h1>
+<p th:text="${msg01}" style="color:red"></p><!--认证失败，打印出提示信息-->
+<form th:action="@{/login}" method="post">
+    username:<input type="text" name="username"><br>
+    password:<input type="text" name="password"><br>
+    <button type="submit">login</button>
+</form>
+</body>
+</html>

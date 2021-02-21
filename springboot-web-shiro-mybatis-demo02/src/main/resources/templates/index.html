@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+<body>
+<h1>这里是首页</h1>
+<p th:text="${msg01}"></p>
+<div shiro:notAuthenticated=""><!--没有登陆时显示login-->
+    <a th:href="@{/login}">login</a></br>
+</div>
+<a th:href="@{/user/add}">add</a>
+<a th:href="@{/user/update}">update</a></br>
+<div shiro:authenticated=""><!--登陆后显示logout-->
+    <a th:href="@{/logout}">logout</a>
+</div>
+</body>
+</html>
