@@ -14,7 +14,7 @@ public class ResourceConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //需要添加映射的绝对路径（路径最后的/一定要加）
-        String imgPath = System.getProperty("user.dir") + "/src/main/resources/static/useruploads/";
+        String imgPath = "D:\\codes\\resources\\springboot-file-upload-useruploads\\";
         //设置映射规则，源路径（ResourceLocations）被设置成可以通过映射路径（ip:port/images）来访问
         registry.addResourceHandler("/images/**").
                 addResourceLocations("file:" + imgPath);
