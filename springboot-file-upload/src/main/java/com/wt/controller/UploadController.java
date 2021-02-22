@@ -26,7 +26,10 @@ public class UploadController {
             ////处理上传文件的步骤////
 
             //1、创建文件在服务器端的存放路径
-            String imgPath = System.getProperty("user.dir") + "/src/main/resources/static/useruploads";
+            //String imgPath = System.getProperty("user.dir") + "/src/main/resources/static/useruploads";
+            String imgPath = "D:\\codes\\resources\\springboot-file-upload-useruploads";
+            //实际打成jar包部署，在找路径时出现问题System.getProperty("user.dir")不能找到项目部署的路径
+            //所以这里直接给出一个具体的路径
             //上面的System.getProperty("user.dir")自动获取项目目录，这样部署的时候就不需要改源码了
             //使用手动的绝对路径是这样的：
             //String imgPath="D:/codes/download/springboot-fileupload/src/main/resources/static/userUpload";
